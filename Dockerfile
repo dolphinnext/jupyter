@@ -19,6 +19,11 @@ RUN apt-get update --yes && \
     gcc && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && \
+    apt-get -qy full-upgrade && \
+    apt-get install -qy curl && \
+    curl -sSL https://get.docker.com/ | sh
+
 USER ${NB_UID}
 
 # R packages including IRKernel which gets installed globally.
@@ -64,9 +69,4 @@ RUN pip install jupyter-server-proxy
 RUN jupyter serverextension enable --sys-prefix jupyter_server_proxy
 COPY install_packages.R /
 RUN Rscript /install_packages.R
-
-RUN apt-get update && \
-    apt-get -qy full-upgrade && \
-    apt-get install -qy curl && \
-    curl -sSL https://get.docker.com/ | sh
 
