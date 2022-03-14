@@ -1,0 +1,5 @@
+bash /usr/local/bin/start-notebook.sh > /home/jovyan/work/.${DNEXT_APP_ID}_jupyter_server.log 2>&1 
+if [ -s "/home/jovyan/work/.${DNEXT_APP_ID}_startup.ipynb" ]; then 
+   jupyter nbconvert --to notebook --execute /home/jovyan/work/.${DNEXT_APP_ID}_startup.ipynb  >  /home/jovyan/work/.${DNEXT_APP_ID}_startup.log 2>&1  
+fi
+

@@ -1,10 +1,8 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-ARG OWNER=jupyter
-ARG BASE_CONTAINER=$OWNER/minimal-notebook
-FROM $BASE_CONTAINER
+FROM dolphinnext/jupyter-base-notebook:1.0
 
-LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
+LABEL maintainer="Onur Yukselen <onur.yukselen@umassmed.edu>"
 
 USER root
 
@@ -67,6 +65,8 @@ RUN set -x && \
 RUN conda update conda
 RUN pip install jupyter-server-proxy
 RUN jupyter serverextension enable --sys-prefix jupyter_server_proxy
+USER root
 COPY install_packages.R /
 RUN Rscript /install_packages.R
-
+COPY startup /
+CMD ["/startup"]
