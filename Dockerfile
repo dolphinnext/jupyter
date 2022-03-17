@@ -78,6 +78,7 @@ RUN R --slave -e "install.packages(c('ggplot2', 'plyr', 'dplyr', 'data.table', '
 RUN R --slave -e "BiocManager::install(c('MAGeCKFlute', 'debrowser', 'iSEE', 'scRNAseq', 'scater'))"
 
 RUN python3 -m pip install papermill 
+RUN apt-get install -y vim
 RUN chmod +x /usr/local/bin/start.sh
 COPY startup /
 CMD ["/startup"]
