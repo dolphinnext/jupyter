@@ -1,5 +1,7 @@
-bash /usr/local/bin/start-notebook.sh > /home/jovyan/work/.${DNEXT_APP_ID}_jupyter_server.log 2>&1 
-if [ -s "/home/jovyan/work/.${DNEXT_APP_ID}_startup.ipynb" ]; then 
-   jupyter nbconvert --to notebook --execute /home/jovyan/work/.${DNEXT_APP_ID}_startup.ipynb  >  /home/jovyan/work/.${DNEXT_APP_ID}_startup.log 2>&1  
+#!/bin/bash
+bash /usr/local/bin/start-notebook.sh > /home/jovyan/work/.app/${DNEXT_APP_ID}_jupyter_server.log 2>&1 &
+if [ -e "/home/jovyan/work/.app/${DNEXT_APP_ID}_startup.ipynb" ]; then 
+   tail -f /home/jovyan/work/.app/${DNEXT_APP_ID}_jupyter_server.log | sed '/To access the server, open this file in a browser/ q'
+   papermill --stdout-file /home/jovyan/work/.app/${DNEXT_APP_ID}_startup_stdout.txt --stderr-file /home/jovyan/work/.app/${DNEXT_APP_ID}_startup_stderr.txt  /home/jovyan/work/.app/${DNEXT_APP_ID}_startup.ipynb /home/jovyan/work/.app/.${DNEXT_APP_ID}_startup.ipynb >  /home/jovyan/work/.app/${DNEXT_APP_ID}_startup.log 2>&1 &
 fi
-
+sleep ${DNEXT_RUN_TIME}
