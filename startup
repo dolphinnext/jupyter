@@ -1,7 +1,7 @@
 #!/bin/bash
 bash /usr/local/bin/start-notebook.sh --LabApp.token='' > /home/jovyan/work/.app/${DNEXT_APP_ID}_jupyter_server.log 2>&1 &
 if [ -e "/home/jovyan/work/.app/${DNEXT_APP_ID}_startup.ipynb" ]; then 
-   tail -f /home/jovyan/work/.app/${DNEXT_APP_ID}_jupyter_server.log | sed '/To access the server, open this file in a browser/ q'
+   tail -f /home/jovyan/work/.app/${DNEXT_APP_ID}_jupyter_server.log | sed '/http:\/\/127.0.0.1/ q'
    papermill --stdout-file /home/jovyan/work/.app/${DNEXT_APP_ID}_startup_stdout.txt --stderr-file /home/jovyan/work/.app/${DNEXT_APP_ID}_startup_stderr.txt  /home/jovyan/work/.app/${DNEXT_APP_ID}_startup.ipynb /home/jovyan/work/.app/.${DNEXT_APP_ID}_startup.ipynb >  /home/jovyan/work/.app/${DNEXT_APP_ID}_startup.log 2>&1 &
 fi
 sleep ${DNEXT_RUN_TIME}
