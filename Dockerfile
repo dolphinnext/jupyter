@@ -1,10 +1,8 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-ARG OWNER=jupyter
-ARG BASE_CONTAINER=$OWNER/minimal-notebook
-FROM $BASE_CONTAINER
+FROM dolphinnext/jupyter-base-notebook:1.0
 
-LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
+LABEL maintainer="Onur Yukselen <onur.yukselen@umassmed.edu>"
 
 USER root
 
@@ -67,6 +65,20 @@ RUN set -x && \
 RUN conda update conda
 RUN pip install jupyter-server-proxy
 RUN jupyter serverextension enable --sys-prefix jupyter_server_proxy
-COPY install_packages.R /
-RUN Rscript /install_packages.R
+USER root
+RUN NPROCS=`awk '/^processor/ {s+=1}; END{print s}' /proc/cpuinfo`
+#COPY install_packages.R /
+#RUN Rscript /install_packages.R
 
+#####################
+### R packages ######
+#####################
+
+RUN R --slave -e "install.packages(c('ggplot2', 'plyr', 'dplyr', 'data.table', 'reshape', 'RColorBrewer', 'reshape2', 'circlize', 'BiocManager', 'ggplot2', 'knitr', 'xtable', 'pheatmap', 'RColorBrewer', 'rmarkdown'), dependencies = TRUE, repos='https://cran.rstudio.com', Ncpus=${NPROCS})"
+RUN R --slave -e "BiocManager::install(c('MAGeCKFlute', 'debrowser', 'iSEE', 'scRNAseq', 'scater'))"
+
+RUN python3 -m pip install papermill 
+RUN apt-get install -y vim
+RUN chmod +x /usr/local/bin/start.sh
+COPY startup /
+CMD ["/startup"]
